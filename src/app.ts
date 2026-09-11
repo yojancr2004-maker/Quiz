@@ -6,12 +6,21 @@ const app = express();
 
 app.use(express.json());
 
-// GET - Consultar todos
+// Ruta raíz (Evita "Cannot GET /" y responde un mensaje JSON)
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    message: "Bienvenido a la API REST de Libros",
+    description: "API REST con Express y TypeScript para la gestión de libros",
+    endpoints: "/api/books"
+  });
+});
+
+// GET - Consultar todos los libros
 app.get('/api/books', (req: Request, res: Response) => {
   res.status(200).json(books);
 });
 
-// GET - Consultar por ID
+// GET - Consultar libro por ID
 app.get('/api/books/:id', (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
   const book = books.find((b) => b.id === id);
@@ -23,7 +32,7 @@ app.get('/api/books/:id', (req: Request, res: Response) => {
   res.status(200).json(book);
 });
 
-// POST - Crear libro
+// POST - Crear un nuevo libro
 app.post('/api/books', (req: Request, res: Response) => {
   const { title, author, year } = req.body;
 
@@ -42,7 +51,7 @@ app.post('/api/books', (req: Request, res: Response) => {
   res.status(201).json({ message: 'Libro creado exitosamente', book: newBook });
 });
 
-// PATCH - Modificar específico
+// PATCH - Modificar un libro parcialmente
 app.patch('/api/books/:id', (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
   const book = books.find((b) => b.id === id);
@@ -58,7 +67,7 @@ app.patch('/api/books/:id', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Libro actualizado parcialmente', book });
 });
 
-// DELETE - Eliminar
+// DELETE - Eliminar un libro
 app.delete('/api/books/:id', (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
   const index = books.findIndex((b) => b.id === id);
